@@ -67,7 +67,7 @@ export default function ChatInterface({ roomImage, resetTrigger, className }: Ch
   };
 
   return (
-    <div className={cn("flex flex-col h-[500px] bg-white rounded-2xl border border-ink/10 shadow-sm overflow-hidden", className)}>
+    <div className={cn("flex flex-col h-[calc(100vh-200px)] lg:h-[600px] bg-white rounded-2xl border border-ink/10 shadow-sm overflow-hidden", className)}>
       {/* Header */}
       <div className="px-6 py-4 border-b border-ink/10 bg-paper/50 flex items-center gap-2">
         <Sparkles className="w-4 h-4 text-accent" />

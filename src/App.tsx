@@ -16,6 +16,7 @@ export default function App() {
   const [selectedStyle, setSelectedStyle] = useState<DesignStyle | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [mobileTab, setMobileTab] = useState<'studio' | 'chat'>('studio');
 
   const handleUpload = useCallback((base64: string | null, mimeType?: string) => {
     setOriginalImage(base64);
@@ -34,6 +35,7 @@ export default function App() {
     setSelectedStyle(style);
     setIsGenerating(true);
     setError(null);
+    setMobileTab('chat');
 
     try {
       const result = await generateReimaginedImage(originalImage, style.prompt, imageMimeType);
@@ -81,6 +83,30 @@ export default function App() {
         </div>
       </header>
 
+      {/* Mobile Tab Bar */}
+      <div className="lg:hidden flex w-full bg-white border-b border-ink/10 sticky top-[65px] z-40">
+        <button
+          onClick={() => setMobileTab('studio')}
+          className="flex-1 py-3 text-sm font-semibold transition-colors"
+          style={{
+            color: mobileTab === 'studio' ? '#1a1a1a' : 'rgba(0,0,0,0.4)',
+            borderBottom: mobileTab === 'studio' ? '2px solid #d4af7a' : '2px solid transparent',
+          }}
+        >
+          Your Space
+        </button>
+        <button
+          onClick={() => setMobileTab('chat')}
+          className="flex-1 py-3 text-sm font-semibold transition-colors"
+          style={{
+            color: mobileTab === 'chat' ? '#1a1a1a' : 'rgba(0,0,0,0.4)',
+            borderBottom: mobileTab === 'chat' ? '2px solid #d4af7a' : '2px solid transparent',
+          }}
+        >
+          Consult Oracle
+        </button>
+      </div>
+
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-12">
         {/* Hero Section */}
         {!originalImage && (
@@ -89,7 +115,7 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto mb-16 space-y-6"
           >
-            <h1 className="text-5xl md:text-7xl font-serif tracking-tight leading-[1.1]">
+            <h1 className="text-5xl sm:text-7xl font-serif tracking-tight leading-[1.1]">
               Reimagine your space <br />
               <span className="italic" style={{ color: '#d4af7a' }}>with ancient wisdom.</span>
             </h1>
@@ -102,7 +128,7 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
           {/* Left Column: Visualization */}
-          <div className="lg:col-span-7 space-y-8">
+          <div className={`lg:col-span-7 space-y-8 ${mobileTab === 'studio' ? 'block' : 'hidden'} lg:block`}>
             <section>
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
@@ -202,7 +228,7 @@ export default function App() {
           </div>
 
           {/* Right Column: Chat & Refinement */}
-          <div className="lg:col-span-5 space-y-8">
+          <div className={`lg:col-span-5 space-y-8 ${mobileTab === 'chat' ? 'block' : 'hidden'} lg:block`}>
             <section className="h-full flex flex-col">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
