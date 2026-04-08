@@ -67,7 +67,7 @@ export default function App() {
           
           <nav className="hidden md:flex items-center gap-8">
             <a href="#" className="text-sm font-medium hover:text-accent transition-colors">Studio</a>
-            <a href="#" className="text-sm font-medium hover:text-accent transition-colors">Showcase</a>
+            <a href="#" className="text-sm font-medium hover:text-accent transition-colors">Gallery</a>
             <a href="#" className="text-sm font-medium hover:text-accent transition-colors">Pricing</a>
           </nav>
 
@@ -109,7 +109,7 @@ export default function App() {
                   <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
                     <Layout className="w-4 h-4 text-accent" />
                   </div>
-                  <h2 className="text-2xl font-serif font-semibold tracking-tight">Room Visualization</h2>
+                  <h2 className="text-2xl font-serif font-semibold tracking-tight">Your Space</h2>
                 </div>
                 {isGenerating && (
                   <div className="flex items-center gap-2 text-accent text-sm font-medium animate-pulse">
@@ -207,7 +207,7 @@ export default function App() {
                 <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
                   <MessageSquare className="w-4 h-4 text-accent" />
                 </div>
-                <h2 className="text-2xl font-serif font-semibold tracking-tight">Refine & Consult</h2>
+                <h2 className="text-2xl font-serif font-semibold tracking-tight">Consult the Oracle</h2>
               </div>
               
               <div className="flex-1">

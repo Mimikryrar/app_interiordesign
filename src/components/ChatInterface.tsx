@@ -71,7 +71,7 @@ export default function ChatInterface({ roomImage, resetTrigger, className }: Ch
       {/* Header */}
       <div className="px-6 py-4 border-bottom border-ink/10 bg-paper/50 flex items-center gap-2">
         <Sparkles className="w-4 h-4 text-accent" />
-        <h3 className="font-serif font-semibold text-lg tracking-tight">Design Consultant</h3>
+        <h3 className="font-serif font-semibold text-lg tracking-tight">χρέομαι</h3>
       </div>
 
       {/* Messages */}
