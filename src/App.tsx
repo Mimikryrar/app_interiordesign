@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Sparkles, Layout, Palette, MessageSquare, Loader2, RefreshCw, ArrowRight } from 'lucide-react';
+import { Sparkles, Layout, Palette, MessageSquare, Loader2, RefreshCw, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
 import UploadZone from './components/UploadZone';
@@ -10,13 +10,19 @@ import { DESIGN_STYLES, DesignStyle, generateReimaginedImage } from './services/
 
 export default function App() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
+  const [imageMimeType, setImageMimeType] = useState('image/jpeg');
+  const [uploadCount, setUploadCount] = useState(0);
   const [reimaginedImage, setReimaginedImage] = useState<string | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<DesignStyle | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleUpload = useCallback((base64: string) => {
+  const handleUpload = useCallback((base64: string | null, mimeType?: string) => {
     setOriginalImage(base64);
+    if (base64) {
+      setImageMimeType(mimeType || 'image/jpeg');
+      setUploadCount(c => c + 1);
+    }
     setReimaginedImage(null);
     setSelectedStyle(null);
     setError(null);
@@ -30,7 +36,7 @@ export default function App() {
     setError(null);
 
     try {
-      const result = await generateReimaginedImage(originalImage, style.prompt);
+      const result = await generateReimaginedImage(originalImage, style.prompt, imageMimeType);
       setReimaginedImage(result);
     } catch (err) {
       console.error('Generation error:', err);
@@ -118,7 +124,7 @@ export default function App() {
               <div className="relative">
                 <AnimatePresence mode="wait">
                   {!originalImage ? (
-                    <UploadZone onUpload={handleUpload} />
+                    <UploadZone value={originalImage} onUpload={handleUpload} />
                   ) : (
                     <motion.div
                       key="visualization"
@@ -127,7 +133,19 @@ export default function App() {
                       className="space-y-6"
                     >
                       {reimaginedImage ? (
-                        <ComparisonSlider before={originalImage} after={reimaginedImage} />
+                        <div className="space-y-3">
+                          <ComparisonSlider before={originalImage} after={reimaginedImage} />
+                          <div className="flex justify-end">
+                            <a
+                              href={reimaginedImage}
+                              download="aura-reimagined.png"
+                              className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full bg-accent text-white hover:bg-accent/90 transition-colors"
+                            >
+                              <Download className="w-3.5 h-3.5" />
+                              Download
+                            </a>
+                          </div>
+                        </div>
                       ) : (
                         <div className="relative aspect-video rounded-3xl overflow-hidden border border-ink/10 shadow-lg bg-ink/5 flex items-center justify-center">
                           <img 
@@ -195,7 +213,7 @@ export default function App() {
               </div>
               
               <div className="flex-1">
-                <ChatInterface roomImage={reimaginedImage || originalImage} />
+                <ChatInterface roomImage={reimaginedImage || originalImage} resetTrigger={uploadCount} />
               </div>
 
               <div className="mt-6 p-6 rounded-2xl bg-accent/5 border border-accent/10">

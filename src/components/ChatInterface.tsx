@@ -10,15 +10,19 @@ interface Message {
   content: string;
 }
 
+const INITIAL_MESSAGE: Message = {
+  role: 'model',
+  content: "Hello! I'm Aura, your AI interior design consultant. How can I help you refine your space today?"
+};
+
 interface ChatInterfaceProps {
   roomImage?: string | null;
+  resetTrigger?: number;
   className?: string;
 }
 
-export default function ChatInterface({ roomImage, className }: ChatInterfaceProps) {
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'model', content: "Hello! I'm Aura, your AI interior design consultant. How can I help you refine your space today?" }
-  ]);
+export default function ChatInterface({ roomImage, resetTrigger, className }: ChatInterfaceProps) {
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -30,6 +34,12 @@ export default function ChatInterface({ roomImage, className }: ChatInterfacePro
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    if (resetTrigger === undefined) return;
+    setMessages([INITIAL_MESSAGE]);
+    setInput('');
+  }, [resetTrigger]);
 
   const handleSend = async (e?: React.FormEvent) => {
     e?.preventDefault();

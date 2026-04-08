@@ -1,16 +1,16 @@
 import React, { useCallback, useState } from 'react';
-import { Upload, Image as ImageIcon, Loader2, X } from 'lucide-react';
+import { Upload, Image as ImageIcon, X } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface UploadZoneProps {
-  onUpload: (base64: string) => void;
+  value?: string | null;
+  onUpload: (base64: string | null, mimeType?: string) => void;
   className?: string;
 }
 
-export default function UploadZone({ onUpload, className }: UploadZoneProps) {
+export default function UploadZone({ value, onUpload, className }: UploadZoneProps) {
   const [isDragging, setIsDragging] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
 
   const handleFile = useCallback((file: File) => {
     if (!file.type.startsWith('image/')) return;
@@ -18,8 +18,7 @@ export default function UploadZone({ onUpload, className }: UploadZoneProps) {
     const reader = new FileReader();
     reader.onload = (e) => {
       const base64 = e.target?.result as string;
-      setPreview(base64);
-      onUpload(base64);
+      onUpload(base64, file.type);
     };
     reader.readAsDataURL(file);
   }, [onUpload]);
@@ -47,13 +46,13 @@ export default function UploadZone({ onUpload, className }: UploadZoneProps) {
   }, [handleFile]);
 
   const clearPreview = () => {
-    setPreview(null);
+    onUpload(null);
   };
 
   return (
     <div className={cn("w-full", className)}>
       <AnimatePresence mode="wait">
-        {!preview ? (
+        {!value ? (
           <motion.div
             key="upload"
             initial={{ opacity: 0, y: 10 }}
@@ -64,14 +63,14 @@ export default function UploadZone({ onUpload, className }: UploadZoneProps) {
             onDragLeave={onDragLeave}
             className={cn(
               "relative border-2 border-dashed rounded-3xl p-12 transition-all flex flex-col items-center justify-center text-center group cursor-pointer",
-              isDragging 
-                ? "border-accent bg-accent/5 scale-[1.02]" 
+              isDragging
+                ? "border-accent bg-accent/5 scale-[1.02]"
                 : "border-ink/10 hover:border-ink/30 hover:bg-ink/[0.02]"
             )}
-            onClick={() => document.getElementById('file-upload')?.click()}
+            onClick={() => document.getElementById('file-upload-drop')?.click()}
           >
             <input
-              id="file-upload"
+              id="file-upload-drop"
               type="file"
               accept="image/*"
               className="hidden"
@@ -92,9 +91,9 @@ export default function UploadZone({ onUpload, className }: UploadZoneProps) {
             animate={{ opacity: 1, scale: 1 }}
             className="relative aspect-video rounded-3xl overflow-hidden border border-ink/10 shadow-lg group"
           >
-            <img 
-              src={preview} 
-              alt="Preview" 
+            <img
+              src={value}
+              alt="Preview"
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
             />

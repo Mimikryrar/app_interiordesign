@@ -1,4 +1,4 @@
-import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || "" });
 
@@ -42,7 +42,7 @@ export const DESIGN_STYLES: DesignStyle[] = [
   }
 ];
 
-export async function generateReimaginedImage(base64Image: string, stylePrompt: string): Promise<string> {
+export async function generateReimaginedImage(base64Image: string, stylePrompt: string, mimeType = 'image/jpeg'): Promise<string> {
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
@@ -51,7 +51,7 @@ export async function generateReimaginedImage(base64Image: string, stylePrompt: 
           {
             inlineData: {
               data: base64Image.split(',')[1] || base64Image,
-              mimeType: 'image/jpeg',
+              mimeType,
             },
           },
           {
@@ -96,10 +96,13 @@ Keep answers concise and inspiring. Ask about budget and style preferences if no
 
   const contents: any[] = [{ text: message }];
   if (roomImage) {
+    const mimeType = roomImage.startsWith('data:')
+      ? roomImage.split(';')[0].split(':')[1]
+      : 'image/jpeg';
     contents.push({
       inlineData: {
         data: roomImage.split(',')[1] || roomImage,
-        mimeType: 'image/jpeg',
+        mimeType,
       },
     });
   }

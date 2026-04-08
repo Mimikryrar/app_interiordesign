@@ -15,6 +15,7 @@ export default function ComparisonSlider({ before, after, className }: Compariso
 
   const handleMove = (event: React.MouseEvent | React.TouchEvent) => {
     if (!isDragging && event.type !== 'click') return;
+    if (event.type === 'touchmove') event.preventDefault();
 
     const container = containerRef.current;
     if (!container) return;
@@ -43,6 +44,7 @@ export default function ComparisonSlider({ before, after, className }: Compariso
     <div 
       ref={containerRef}
       className={cn("relative w-full aspect-video overflow-hidden rounded-2xl cursor-col-resize select-none border border-ink/10", className)}
+      style={{ touchAction: 'none' }}
       onMouseMove={handleMove}
       onMouseDown={handleMouseDown}
       onTouchMove={handleMove}
