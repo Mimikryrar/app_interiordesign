@@ -56,24 +56,24 @@ export default function App() {
   return (
     <div className="min-h-screen bg-paper flex flex-col selection:bg-accent/20">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-paper/80 backdrop-blur-xl border-b border-ink/5 px-6 py-4">
+      <header className="sticky top-0 z-50 border-b border-white/10 px-6 py-4" style={{ backgroundColor: '#1a1a1a' }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div>
-              <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 300 }} className="text-2xl tracking-tight leading-none">λόγος</h1>
-              <p className="text-[10px] uppercase font-semibold text-ink/40 mt-1" style={{ letterSpacing: '0.2em' }}>AI Interior Consultant</p>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontWeight: 300, color: '#f5f2ed' }} className="text-2xl tracking-tight leading-none">λόγος</h1>
+              <p className="text-[10px] uppercase font-semibold mt-1" style={{ letterSpacing: '0.2em', color: 'rgba(255,255,255,0.4)' }}>AI Interior Consultant</p>
             </div>
           </div>
-          
+
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#" className="text-sm font-medium hover:text-accent transition-colors">Studio</a>
-            <a href="#" className="text-sm font-medium hover:text-accent transition-colors">Gallery</a>
-            <a href="#" className="text-sm font-medium hover:text-accent transition-colors">Pricing</a>
+            <a href="#" className="text-sm font-medium transition-colors" style={{ color: 'rgba(255,255,255,0.6)' }} onMouseEnter={e => (e.currentTarget.style.color = '#fff')} onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}>Studio</a>
+            <a href="#" className="text-sm font-medium transition-colors" style={{ color: 'rgba(255,255,255,0.6)' }} onMouseEnter={e => (e.currentTarget.style.color = '#fff')} onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}>Gallery</a>
+            <a href="#" className="text-sm font-medium transition-colors" style={{ color: 'rgba(255,255,255,0.6)' }} onMouseEnter={e => (e.currentTarget.style.color = '#fff')} onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}>Pricing</a>
           </nav>
 
           <button
             onClick={reset}
-            className="text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full border hover:bg-ink/5 transition-all"
+            className="text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full border transition-all"
             style={{ borderColor: '#d4af7a', color: '#d4af7a' }}
           >
             New Project
@@ -217,7 +217,7 @@ export default function App() {
               <div className="mt-6 p-6 rounded-2xl bg-accent/5 border border-accent/10">
                 <h4 className="text-sm font-semibold uppercase tracking-wider text-accent mb-2">Pro Tip</h4>
                 <p className="text-sm text-ink/70 leading-relaxed">
-                  Ask Aura for "shoppable links" to find furniture that matches your reimagined style, or request specific refinements like "change the wall color to sage green".
+                  Ask χρέομαι for "shoppable links" to find furniture that matches your reimagined style, or request specific refinements like "change the wall color to sage green".
                 </p>
               </div>
             </section>
