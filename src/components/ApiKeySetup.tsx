@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-type Provider = 'gemini' | 'replicate';
+type Provider = 'gemini' | 'modelslab';
 
 interface ApiKeySetupProps {
   onKeySet: (data: { provider: Provider; key: string }) => void;
@@ -17,13 +17,13 @@ const PROVIDERS: { id: Provider; name: string; subtext: string; placeholder: str
     linkLabel: 'aistudio.google.com/apikey',
   },
   {
-    id: 'replicate',
-    name: 'Stable Diffusion',
-    subtext: 'Free tier available — generates new room from style description',
-    placeholder: 'r8_...',
-    prefix: 'r8_',
-    link: 'https://replicate.com/account/api-tokens',
-    linkLabel: 'replicate.com/account/api-tokens',
+    id: 'modelslab',
+    name: 'ModelsLab Interior',
+    subtext: 'Specialized interior design model — $0.004/image, free tier available',
+    placeholder: 'ML-...',
+    prefix: 'ML-',
+    link: 'https://modelslab.com/models/modelslab/interior',
+    linkLabel: 'modelslab.com/models/modelslab/interior',
   },
 ];
 

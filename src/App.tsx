@@ -7,7 +7,7 @@ import ComparisonSlider from './components/ComparisonSlider';
 import StyleCarousel from './components/StyleCarousel';
 import ChatInterface from './components/ChatInterface';
 import ApiKeySetup from './components/ApiKeySetup';
-import { DESIGN_STYLES, DesignStyle, generateReimaginedImage, generateReimaginedImageReplicate } from './services/geminiService';
+import { DESIGN_STYLES, DesignStyle, generateReimaginedImage, generateReimaginedImageModelslab } from './services/geminiService';
 
 export default function App() {
   const [provider, setProvider] = useState<string>(() => localStorage.getItem('logos-provider') || 'gemini');
@@ -37,7 +37,7 @@ export default function App() {
 
   const changeApiKey = () => {
     localStorage.removeItem('logos-gemini-key');
-    localStorage.removeItem('logos-replicate-key');
+    localStorage.removeItem('logos-modelslab-key');
     localStorage.removeItem('logos-provider');
     setApiKey('');
     setProvider('gemini');
@@ -56,8 +56,8 @@ export default function App() {
     setMobileTab('chat');
 
     try {
-      const result = provider === 'replicate'
-        ? await generateReimaginedImageReplicate(originalImage, imageMimeType, style.prompt, apiKey)
+      const result = provider === 'modelslab'
+        ? await generateReimaginedImageModelslab(originalImage, imageMimeType, style.prompt, apiKey)
         : await generateReimaginedImage(originalImage, style.prompt, imageMimeType, apiKey);
       setReimaginedImage(result);
     } catch (err) {

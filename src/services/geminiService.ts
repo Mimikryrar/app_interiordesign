@@ -66,10 +66,10 @@ export async function generateReimaginedImage(base64Image: string, stylePrompt: 
   return `data:image/png;base64,${imageData}`;
 }
 
-export async function generateReimaginedImageReplicate(base64Image: string, mimeType = 'image/jpeg', stylePrompt: string, apiKey = ''): Promise<string> {
-  const res = await fetch(`${API_BASE}/api/generate-image-replicate`, {
+export async function generateReimaginedImageModelslab(base64Image: string, mimeType = 'image/jpeg', stylePrompt: string, apiKey = ''): Promise<string> {
+  const res = await fetch(`${API_BASE}/api/generate-image-modelslab`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-replicate-key': apiKey },
+    headers: { 'Content-Type': 'application/json', 'x-modelslab-key': apiKey },
     body: JSON.stringify({
       base64Image: base64Image.split(',')[1] || base64Image,
       mimeType,

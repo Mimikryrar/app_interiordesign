@@ -67,11 +67,11 @@ app.post('/api/generate-image', async (req, res) => {
   }
 });
 
-// POST /api/generate-image-replicate
-app.post('/api/generate-image-replicate', async (req, res) => {
-  const apiKey = req.headers['x-replicate-key'] as string;
+// POST /api/generate-image-modelslab
+app.post('/api/generate-image-modelslab', async (req, res) => {
+  const apiKey = req.headers['x-modelslab-key'] as string;
   if (!apiKey) {
-    return res.status(401).json({ error: 'Missing x-replicate-key header.' });
+    return res.status(401).json({ error: 'Missing x-modelslab-key header.' });
   }
 
   const { base64Image, mimeType, stylePrompt } = req.body;
@@ -80,56 +80,40 @@ app.post('/api/generate-image-replicate', async (req, res) => {
   }
 
   try {
-    // Create prediction
-    const createRes = await fetch('https://api.replicate.com/v1/predictions', {
+    const mlRes = await fetch('https://modelslab.com/api/v6/realtime/img2img', {
       method: 'POST',
-      headers: {
-        'Authorization': `Token ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        version: '15a3689ee13b0d2616e98820eca31d4af4a36c58b0040fc64858836',
-        input: {
-          image: `data:${mimeType || 'image/jpeg'};base64,${base64Image}`,
-          prompt: `${stylePrompt}, interior design, photorealistic, high quality`,
-          strength: 0.7,
-          guidance_scale: 7.5,
-          num_inference_steps: 50,
-        },
+        key: apiKey,
+        model_id: 'interior',
+        prompt: `${stylePrompt}, interior design, photorealistic, high quality, 4k`,
+        negative_prompt: 'ugly, blurry, low quality, distorted, deformed',
+        init_image: `data:image/${(mimeType || 'image/jpeg').split('/')[1]};base64,${base64Image}`,
+        strength: 0.7,
+        width: '1024',
+        height: '768',
+        samples: '1',
+        num_inference_steps: '30',
+        guidance_scale: 7.5,
+        safety_checker: 'no',
       }),
     });
 
-    const prediction = await createRes.json();
-    if (!createRes.ok) {
-      throw new Error(prediction.detail || 'Failed to create Replicate prediction.');
+    const data = await mlRes.json();
+    if (!mlRes.ok || data.status === 'error') {
+      throw new Error(data.message || data.error || `ModelsLab error ${mlRes.status}`);
     }
 
-    // Poll until succeeded or failed
-    const pollUrl = prediction.urls?.get;
-    if (!pollUrl) throw new Error('No polling URL returned by Replicate.');
+    const imageUrl: string = Array.isArray(data.output) ? data.output[0] : data.output;
+    if (!imageUrl) throw new Error('No image URL returned by ModelsLab.');
 
-    let result = prediction;
-    while (result.status !== 'succeeded' && result.status !== 'failed') {
-      await new Promise(r => setTimeout(r, 1500));
-      const pollRes = await fetch(pollUrl, {
-        headers: { 'Authorization': `Token ${apiKey}` },
-      });
-      result = await pollRes.json();
-    }
-
-    if (result.status === 'failed') {
-      throw new Error(result.error || 'Replicate prediction failed.');
-    }
-
-    // output is an array of image URLs — fetch first and convert to base64
-    const imageUrl: string = Array.isArray(result.output) ? result.output[0] : result.output;
     const imgRes = await fetch(imageUrl);
     const imgBuffer = await imgRes.arrayBuffer();
     const base64Out = Buffer.from(imgBuffer).toString('base64');
 
     return res.json({ imageData: base64Out });
   } catch (error: any) {
-    console.error('[/api/generate-image-replicate]', error);
+    console.error('[/api/generate-image-modelslab]', error);
     res.status(500).json({ error: error.message || 'Image generation failed.' });
   }
 });
