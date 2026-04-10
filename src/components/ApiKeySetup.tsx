@@ -20,8 +20,8 @@ const PROVIDERS: { id: Provider; name: string; subtext: string; placeholder: str
     id: 'modelslab',
     name: 'ModelsLab Interior',
     subtext: 'Specialized interior design model — $0.004/image, free tier available',
-    placeholder: 'ML-...',
-    prefix: 'ML-',
+    placeholder: 'Your API key...',
+    prefix: '',
     link: 'https://modelslab.com/models/modelslab/interior',
     linkLabel: 'modelslab.com/models/modelslab/interior',
   },
@@ -36,8 +36,11 @@ export default function ApiKeySetup({ onKeySet }: ApiKeySetupProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!key.startsWith(active.prefix)) {
-      setError(`Invalid key — ${active.name} keys start with "${active.prefix}".`);
+    const valid = active.id === 'modelslab' ? key.length > 10 : key.startsWith(active.prefix);
+    if (!valid) {
+      setError(active.id === 'modelslab'
+        ? 'Invalid key — must be longer than 10 characters.'
+        : `Invalid key — ${active.name} keys start with "${active.prefix}".`);
       return;
     }
     localStorage.setItem('logos-provider', provider);
