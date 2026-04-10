@@ -1,3 +1,5 @@
+import { mockGenerateImage, mockChat } from './mockService';
+
 // In production (Docker/Cloud Run): VITE_API_URL='' → same-origin /api/... requests.
 // In local dev: VITE_API_URL is undefined → falls back to http://localhost:3001.
 const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:3001';
@@ -43,6 +45,8 @@ export const DESIGN_STYLES: DesignStyle[] = [
 ];
 
 export async function generateReimaginedImage(base64Image: string, stylePrompt: string, mimeType = 'image/jpeg', apiKey = ''): Promise<string> {
+  if (apiKey === 'DEMO') return mockGenerateImage();
+
   const res = await fetch(`${API_BASE}/api/generate-image`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-gemini-key': apiKey },
@@ -68,6 +72,8 @@ export async function chatWithDesigner(
   roomImage?: string,
   apiKey = ''
 ): Promise<string> {
+  if (apiKey === 'DEMO') return mockChat();
+
   const res = await fetch(`${API_BASE}/api/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-gemini-key': apiKey },

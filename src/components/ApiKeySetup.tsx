@@ -131,6 +131,32 @@ export default function ApiKeySetup({ onKeySet }: ApiKeySetupProps) {
             Continue
           </button>
         </form>
+
+        <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+          <button
+            type="button"
+            onClick={() => {
+              localStorage.setItem('logos-gemini-key', 'DEMO');
+              onKeySet('DEMO');
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '0.8125rem',
+              color: 'rgba(26,26,26,0.5)',
+              cursor: 'pointer',
+              padding: '0.25rem 0',
+              transition: 'color 0.15s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = '#d4af7a')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(26,26,26,0.5)')}
+          >
+            Try Demo Mode
+          </button>
+          <p style={{ fontSize: '0.6875rem', color: 'rgba(26,26,26,0.35)', margin: 0 }}>
+            Demo mode uses simulated responses — no API key required
+          </p>
+        </div>
       </div>
     </div>
   );
